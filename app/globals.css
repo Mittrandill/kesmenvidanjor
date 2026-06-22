@@ -1,26 +1,87 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Çeşme Kesmen Vidanjör — Tasarım Sistemi
+   Renkler kamyondan: bordo + amber + şık koyu zemin. (Kar/kış teması YOK)
+--------------------------------------------------------------------------- */
+@theme {
+  --color-brand-50: #fdf2f2;
+  --color-brand-100: #fce0e0;
+  --color-brand-200: #f9c6c6;
+  --color-brand-300: #f29d9d;
+  --color-brand-400: #e76565;
+  --color-brand-500: #d83a3a;
+  --color-brand-600: #c8102e; /* primary kırmızı */
+  --color-brand-700: #9e1b1b; /* bordo */
+  --color-brand-800: #821919;
+  --color-brand-900: #6d1a1a;
+  --color-brand-950: #3c0a0a;
+
+  --color-amber-glow: #ffb000;
+  --color-amber-soft: #ff8c1a;
+
+  --color-ink-900: #0c0f16; /* en koyu zemin */
+  --color-ink-800: #141925;
+  --color-ink-700: #1d2333;
+  --color-ink-600: #2a3142;
+
+  --color-snow: #f6f8fb;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #141925;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Amber glow yardımcıları */
+@utility glow-amber {
+  box-shadow: 0 0 24px -4px rgba(255, 176, 0, 0.55);
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Bölüm geçiş gradyanı (koyu zemin) */
+.bg-ink-gradient {
+  background: radial-gradient(
+      1200px 600px at 80% -10%,
+      rgba(200, 16, 46, 0.25),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 0% 10%,
+      rgba(255, 176, 0, 0.12),
+      transparent 55%
+    ),
+    var(--color-ink-900);
+}
+
+/* Erişilebilirlik: hareket azaltma tercihi */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
