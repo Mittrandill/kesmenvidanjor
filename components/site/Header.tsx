@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { primaryContact } from "@/lib/site-config";
@@ -40,18 +41,15 @@ export function Header() {
       {/* Ana navigasyon */}
       <div className="bg-white/95 backdrop-blur border-b border-black/5 shadow-sm">
         <div className="mx-auto max-w-7xl px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <span className="grid place-items-center w-10 h-10 rounded-xl bg-brand-700 text-white shadow-md shadow-brand-700/30">
-              <Icon name="Truck" size={24} />
-            </span>
-            <span className="leading-tight">
-              <span className="block font-extrabold text-ink-900 tracking-tight">
-                KESMEN VİDANJÖR
-              </span>
-              <span className="block text-[11px] font-medium text-brand-600 -mt-0.5">
-                Çeşme · 7/24 Hizmet
-              </span>
-            </span>
+          <Link href="/" className="flex items-center gap-2" aria-label="Kesmen Vidanjör ana sayfa">
+            <Image
+              src="/images/logo.png"
+              alt="Çeşme Kesmen Vidanjör logosu"
+              width={1030}
+              height={977}
+              priority
+              className="h-12 sm:h-14 w-auto"
+            />
           </Link>
 
           {/* Masaüstü nav */}
