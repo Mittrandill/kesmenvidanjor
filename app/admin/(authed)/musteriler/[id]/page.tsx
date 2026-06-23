@@ -40,12 +40,14 @@ export default async function MusteriDetayPage({
       .from("appointments")
       .select("id,customer_id,service_slug,scheduled_at,status")
       .eq("customer_id", customerId)
-      .order("scheduled_at", { ascending: false }),
+      .order("scheduled_at", { ascending: false })
+      .limit(5),
     supabase
       .from("ledger_entries")
       .select("id,entry_type,amount,description,created_at")
       .eq("customer_id", customerId)
-      .order("created_at", { ascending: false }),
+      .order("created_at", { ascending: false })
+      .limit(10),
   ]);
 
   if (!customer) {
@@ -81,7 +83,17 @@ export default async function MusteriDetayPage({
       <LedgerEntryForm action={boundCreateLedgerEntry} />
 
       <section className="space-y-2">
-        <h2 className="text-sm font-semibold text-ink-500">Cari Hareketler</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-ink-500">Cari Hareketler</h2>
+          {ledgerEntries && ledgerEntries.length > 0 && (
+            <Link
+              href={`/admin/satislar?customer_id=${customerId}`}
+              className="text-sm font-medium text-brand-600 hover:underline"
+            >
+              Satış Geçmişini Gör →
+            </Link>
+          )}
+        </div>
         {ledgerEntries && ledgerEntries.length > 0 ? (
           <div className="space-y-2">
             {ledgerEntries.map((entry) => (
@@ -96,7 +108,17 @@ export default async function MusteriDetayPage({
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-sm font-semibold text-ink-500">Randevu Geçmişi</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-ink-500">Randevu Geçmişi</h2>
+          {appointments && appointments.length > 0 && (
+            <Link
+              href={`/admin/randevular?customer_id=${customerId}`}
+              className="text-sm font-medium text-brand-600 hover:underline"
+            >
+              Tüm Randevuları Gör →
+            </Link>
+          )}
+        </div>
         {appointments && appointments.length > 0 ? (
           <div className="space-y-2">
             {appointments.map((a) => (

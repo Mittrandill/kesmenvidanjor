@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Icon } from "@/components/ui/Icon";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { AppointmentForm } from "@/components/admin/AppointmentForm";
-import { CompleteAppointmentForm } from "@/components/admin/CompleteAppointmentForm";
+import { CompleteToggle } from "@/components/admin/CompleteToggle";
 import {
   updateAppointment,
   completeAppointment,
@@ -65,18 +65,23 @@ export default async function RandevuDetayPage({
         Takvime Ekle
       </a>
 
-      {appointment.status === "planlandi" && (
+      {appointment.status !== "iptal" && (
         <div className="space-y-3">
-          <CompleteAppointmentForm action={boundComplete} />
-          <form action={boundCancel}>
-            <button
-              type="submit"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-brand-600"
-            >
-              <Icon name="X" size={16} />
-              Randevuyu İptal Et
-            </button>
-          </form>
+          <CompleteToggle
+            action={boundComplete}
+            completed={appointment.status === "tamamlandi"}
+          />
+          {appointment.status === "planlandi" && (
+            <form action={boundCancel}>
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink-700 ring-1 ring-black/10 hover:ring-brand-200"
+              >
+                <Icon name="X" size={16} />
+                Randevuyu İptal Et
+              </button>
+            </form>
+          )}
         </div>
       )}
 

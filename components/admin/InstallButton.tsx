@@ -42,7 +42,7 @@ export function InstallButton() {
         className="flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-ink-600 hover:bg-black/5"
       >
         <Icon name="DownloadSimple" size={18} />
-        <span className="hidden sm:inline">Uygulamayı Yükle</span>
+        <span>Uygulamayı Yükle</span>
       </button>
     );
   }
@@ -57,13 +57,14 @@ export function InstallButton() {
           className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-ink-600 hover:bg-black/5"
         >
           <Icon name="ShareFat" size={18} />
-          <span className="hidden sm:inline">Ana Ekrana Ekle</span>
+          <span>Ana Ekrana Ekle</span>
         </button>
         {showIosTip && (
-          <div className="absolute right-0 top-full z-50 mt-2 w-60 rounded-xl bg-ink-900 p-3 text-xs leading-relaxed text-white shadow-lg">
-            Bu paneli ana ekranınıza eklemek için: Safari&apos;de Paylaş{" "}
-            <Icon name="ShareFat" size={12} className="inline" /> ikonuna dokunup
-            &quot;Ana Ekrana Ekle&quot;yi seçin.
+          <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl bg-ink-900 p-3 text-xs leading-relaxed text-white shadow-lg">
+            Bu paneli ana ekranınıza eklemek için: Safari&apos;nin araç çubuğundaki{" "}
+            <strong>Paylaş</strong> düğmesine dokunun (adres çubuğunun yanında veya
+            ekranın altındaki menüde bulunur), ardından açılan listeden{" "}
+            <strong>&quot;Ana Ekrana Ekle&quot;</strong>yi seçin.
           </div>
         )}
       </div>

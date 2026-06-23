@@ -138,5 +138,6 @@ export async function completeAppointment(
   revalidatePath("/admin/randevular");
   revalidatePath("/admin");
   revalidatePath("/admin/musteriler");
-  redirect(`/admin/randevular/${id}`);
+  revalidatePath("/admin/satislar");
+  return undefined;
 }
