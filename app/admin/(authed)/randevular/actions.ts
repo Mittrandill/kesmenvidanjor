@@ -86,7 +86,7 @@ export async function updateAppointment(
   revalidatePath(`/admin/randevular/${id}`);
   revalidatePath("/admin/randevular");
   revalidatePath("/admin");
-  redirect(`/admin/randevular/${id}`);
+  return undefined;
 }
 
 export async function cancelAppointment(id: number) {
@@ -108,6 +108,7 @@ export async function deleteAppointment(id: number) {
 const completeSchema = z.object({
   amount: z.coerce.number().positive("Tutar 0'dan büyük olmalı"),
   description: z.string().optional().or(z.literal("")),
+  invoice_required: z.boolean().optional(),
 });
 
 export async function completeAppointment(
@@ -118,6 +119,7 @@ export async function completeAppointment(
   const parsed = completeSchema.safeParse({
     amount: formData.get("amount"),
     description: formData.get("description"),
+    invoice_required: formData.get("invoice_required") === "true",
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Geçersiz tutar." };
@@ -128,6 +130,7 @@ export async function completeAppointment(
     p_appointment_id: id,
     p_amount: parsed.data.amount,
     p_description: parsed.data.description || undefined,
+    p_invoice_required: parsed.data.invoice_required ?? false,
   });
 
   if (error) {

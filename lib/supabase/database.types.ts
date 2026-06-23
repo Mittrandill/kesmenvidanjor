@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          type: Database["public"]["Enums"]["account_type"]
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          name: string
+          type: Database["public"]["Enums"]["account_type"]
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          name?: string
+          type?: Database["public"]["Enums"]["account_type"]
+        }
+        Relationships: []
+      }
       appointments: {
         Row: {
           completed_at: string | null
@@ -97,33 +118,59 @@ export type Database = {
       }
       ledger_entries: {
         Row: {
+          account_id: number | null
           amount: number
           created_at: string
           customer_id: number
           description: string | null
           entry_type: Database["public"]["Enums"]["ledger_entry_type"]
           id: number
+          invoice_number: string | null
+          invoice_required: boolean
+          payment_method: Database["public"]["Enums"]["payment_method"] | null
           related_appointment_id: number | null
         }
         Insert: {
+          account_id?: number | null
           amount: number
           created_at?: string
           customer_id: number
           description?: string | null
           entry_type: Database["public"]["Enums"]["ledger_entry_type"]
           id?: never
+          invoice_number?: string | null
+          invoice_required?: boolean
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
           related_appointment_id?: number | null
         }
         Update: {
+          account_id?: number | null
           amount?: number
           created_at?: string
           customer_id?: number
           description?: string | null
           entry_type?: Database["public"]["Enums"]["ledger_entry_type"]
           id?: never
+          invoice_number?: string | null
+          invoice_required?: boolean
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
           related_appointment_id?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["account_id"]
+          },
+          {
+            foreignKeyName: "ledger_entries_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "ledger_entries_customer_id_fkey"
             columns: ["customer_id"]
@@ -149,6 +196,13 @@ export type Database = {
       }
     }
     Views: {
+      account_balances: {
+        Row: {
+          account_id: number | null
+          balance: number | null
+        }
+        Relationships: []
+      }
       customer_balances: {
         Row: {
           balance: number | null
@@ -163,13 +217,16 @@ export type Database = {
           p_amount: number
           p_appointment_id: number
           p_description?: string
+          p_invoice_required?: boolean
         }
         Returns: undefined
       }
     }
     Enums: {
+      account_type: "kasa" | "banka"
       appointment_status: "planlandi" | "tamamlandi" | "iptal"
       ledger_entry_type: "borc" | "tahsilat" | "iade"
+      payment_method: "nakit" | "pos" | "havale"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -297,8 +354,10 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: ["kasa", "banka"],
       appointment_status: ["planlandi", "tamamlandi", "iptal"],
       ledger_entry_type: ["borc", "tahsilat", "iade"],
+      payment_method: ["nakit", "pos", "havale"],
     },
   },
 } as const

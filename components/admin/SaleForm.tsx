@@ -1,7 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { services } from "@/lib/site-config";
+import { Switch } from "@/components/admin/Switch";
+import { FormActionBar } from "@/components/admin/FormActionBar";
 import type { FormState } from "@/app/admin/(authed)/satislar/actions";
 
 const inputCls =
@@ -15,6 +17,7 @@ export function SaleForm({
   customers: { id: number; name: string }[];
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const [invoiceRequired, setInvoiceRequired] = useState(false);
 
   return (
     <form action={formAction} className="space-y-4">
@@ -75,15 +78,39 @@ export function SaleForm({
         />
       </div>
 
+      <div className="space-y-3 rounded-xl bg-black/[0.02] px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-ink-900">Fatura Gerekli</p>
+            <p className="text-xs text-ink-500">Sonra fatura no eklemeniz hatırlatılır</p>
+          </div>
+          <Switch checked={invoiceRequired} onChange={setInvoiceRequired} />
+          <input
+            type="hidden"
+            name="invoice_required"
+            value={invoiceRequired ? "true" : "false"}
+          />
+        </div>
+        {invoiceRequired && (
+          <input
+            className={inputCls}
+            name="invoice_number"
+            placeholder="Fatura No (kesildiyse şimdi de girebilirsiniz)"
+          />
+        )}
+      </div>
+
       {state?.error && <p className="text-sm text-brand-600">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
-      >
-        {pending ? "Kaydediliyor..." : "Satışı Kaydet"}
-      </button>
+      <FormActionBar>
+        <button
+          type="submit"
+          disabled={pending}
+          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+        >
+          {pending ? "Kaydediliyor..." : "Satışı Kaydet"}
+        </button>
+      </FormActionBar>
     </form>
   );
 }

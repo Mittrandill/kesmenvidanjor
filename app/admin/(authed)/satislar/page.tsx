@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { SaleListItem } from "@/components/admin/SaleListItem";
 import { Pagination } from "@/components/admin/Pagination";
 import { deleteSale } from "@/app/admin/(authed)/satislar/actions";
 import { Icon } from "@/components/ui/Icon";
@@ -30,7 +31,7 @@ export default async function SatislarPage({
   let query = supabase
     .from("ledger_entries")
     .select(
-      "id,amount,description,created_at,related_appointment_id,customer_id,customers(name)",
+      "id,amount,description,created_at,related_appointment_id,customer_id,invoice_required,invoice_number,customers(name)",
       { count: "exact" },
     )
     .eq("entry_type", "borc")
@@ -83,7 +84,7 @@ export default async function SatislarPage({
         </p>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
+          <div className="hidden lg:block overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-black/5 text-left text-xs font-semibold uppercase tracking-wide text-ink-500">
@@ -112,7 +113,17 @@ export default async function SatislarPage({
                         {s.customers?.name ?? "—"}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-ink-600">{s.description ?? "—"}</td>
+                    <td className="px-4 py-3 text-ink-600">
+                      <div className="flex items-center gap-2">
+                        {s.description ?? "—"}
+                        {s.invoice_required && !s.invoice_number && (
+                          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
+                            <Icon name="WarningCircle" size={12} />
+                            Fatura Bekliyor
+                          </span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-4 py-3 whitespace-nowrap font-semibold text-brand-600">
                       {currencyFormatter.format(s.amount)}
                     </td>
@@ -147,6 +158,23 @@ export default async function SatislarPage({
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="lg:hidden space-y-2">
+            {list.map((s) => (
+              <SaleListItem
+                key={s.id}
+                sale={{
+                  id: s.id,
+                  customer_id: s.customer_id,
+                  customer_name: s.customers?.name,
+                  description: s.description,
+                  amount: s.amount,
+                  created_at: s.created_at,
+                  invoice_required: s.invoice_required,
+                  invoice_number: s.invoice_number,
+                }}
+              />
+            ))}
           </div>
           <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
         </>

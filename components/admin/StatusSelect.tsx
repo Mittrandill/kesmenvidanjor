@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { ConfirmSheet } from "@/components/admin/ConfirmSheet";
+import { CompleteSheet } from "@/components/admin/CompleteSheet";
 import {
   completeAppointment,
   cancelAppointment,
@@ -16,63 +18,54 @@ export function StatusSelect({
   status: "planlandi" | "tamamlandi" | "iptal";
 }) {
   const router = useRouter();
-  const [pending, setPending] = useState(false);
+  const [completeOpen, setCompleteOpen] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
 
   if (status !== "planlandi") {
     return <StatusBadge status={status} />;
   }
 
-  async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const value = e.target.value;
-    if (value === "planlandi") return;
+  const boundComplete = completeAppointment.bind(null, id);
 
-    if (value === "tamamlandi") {
-      const amountStr = window.prompt("Hizmet bedeli (₺):");
-      if (amountStr === null) {
-        e.target.value = "planlandi";
-        return;
-      }
-      const amount = Number(amountStr.replace(",", "."));
-      if (!amount || amount <= 0) {
-        alert("Geçerli bir tutar girin.");
-        e.target.value = "planlandi";
-        return;
-      }
-      setPending(true);
-      const fd = new FormData();
-      fd.set("amount", String(amount));
-      fd.set("description", "");
-      const result = await completeAppointment(id, undefined, fd);
-      setPending(false);
-      if (result?.error) {
-        alert(result.error);
-        e.target.value = "planlandi";
-        return;
-      }
-      router.refresh();
-    } else if (value === "iptal") {
-      if (!confirm("Bu randevuyu iptal etmek istediğinize emin misiniz?")) {
-        e.target.value = "planlandi";
-        return;
-      }
-      setPending(true);
-      await cancelAppointment(id);
-      setPending(false);
-      router.refresh();
-    }
+  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const value = e.target.value;
+    e.target.value = "planlandi";
+    if (value === "tamamlandi") setCompleteOpen(true);
+    else if (value === "iptal") setCancelOpen(true);
   }
 
   return (
-    <select
-      defaultValue={status}
-      onChange={handleChange}
-      onClick={(e) => e.stopPropagation()}
-      disabled={pending}
-      className="rounded-lg border border-black/10 bg-white px-2 py-1.5 text-xs font-medium text-ink-700 outline-none focus:border-brand-500 disabled:opacity-60"
-    >
-      <option value="planlandi">Planlandı</option>
-      <option value="tamamlandi">Tamamlandı</option>
-      <option value="iptal">İptal</option>
-    </select>
+    <div onClick={(e) => e.stopPropagation()}>
+      <select
+        value="planlandi"
+        onChange={handleChange}
+        className="rounded-lg border border-black/10 bg-white px-2 py-1.5 text-xs font-medium text-ink-700 outline-none focus:border-brand-500"
+      >
+        <option value="planlandi">Planlandı</option>
+        <option value="tamamlandi">Tamamlandı</option>
+        <option value="iptal">İptal</option>
+      </select>
+
+      <CompleteSheet
+        open={completeOpen}
+        onClose={() => {
+          setCompleteOpen(false);
+          router.refresh();
+        }}
+        action={boundComplete}
+      />
+      <ConfirmSheet
+        open={cancelOpen}
+        onClose={() => setCancelOpen(false)}
+        title="Randevuyu İptal Et"
+        message="Bu randevuyu iptal etmek istediğinize emin misiniz?"
+        confirmLabel="İptal Et"
+        danger
+        action={async () => {
+          await cancelAppointment(id);
+          router.refresh();
+        }}
+      />
+    </div>
   );
 }

@@ -11,7 +11,7 @@ export function BottomTabBar() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-40 grid grid-cols-4 border-t border-black/5 bg-white lg:hidden"
+      className="fixed bottom-0 inset-x-0 z-40 grid grid-cols-5 border-t border-black/5 bg-white lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       {navItems.map((tab) => {
@@ -24,11 +24,11 @@ export function BottomTabBar() {
             key={tab.href}
             href={tab.href}
             className={cn(
-              "flex min-w-0 flex-col items-center gap-1 px-1 py-2.5 text-[11px] font-medium transition-colors",
+              "flex min-w-0 min-h-[56px] flex-col items-center justify-center gap-1 px-0.5 py-2 text-[10px] font-medium transition-colors active:bg-black/5",
               active ? "text-brand-600" : "text-ink-500",
             )}
           >
-            <Icon name={tab.icon} size={22} weight={active ? "fill" : "regular"} />
+            <Icon name={tab.icon} size={23} weight={active ? "fill" : "regular"} />
             <span className="truncate w-full text-center">{tab.label}</span>
           </Link>
         );

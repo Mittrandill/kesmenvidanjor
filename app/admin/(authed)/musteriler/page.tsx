@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BalanceDisplay } from "@/components/admin/BalanceDisplay";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { CustomerListItem } from "@/components/admin/CustomerListItem";
 import { Pagination } from "@/components/admin/Pagination";
 import { deleteCustomer } from "@/app/admin/(authed)/musteriler/actions";
 import { Icon } from "@/components/ui/Icon";
@@ -69,7 +70,7 @@ export default async function MusterilerPage({
         </p>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
+          <div className="hidden lg:block overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-black/5 text-left text-xs font-semibold uppercase tracking-wide text-ink-500">
@@ -122,6 +123,11 @@ export default async function MusterilerPage({
                 ))}
               </tbody>
             </table>
+          </div>
+          <div className="lg:hidden space-y-2">
+            {list.map((c) => (
+              <CustomerListItem key={c.id} customer={c} />
+            ))}
           </div>
           <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
         </>

@@ -83,14 +83,31 @@ export async function updateCustomer(
 
   revalidatePath(`/admin/musteriler/${id}`);
   revalidatePath("/admin/musteriler");
-  redirect(`/admin/musteriler/${id}`);
+  return undefined;
 }
 
-const ledgerEntrySchema = z.object({
-  entry_type: z.enum(["borc", "tahsilat", "iade"]),
-  amount: z.coerce.number().positive("Tutar 0'dan büyük olmalı"),
-  description: z.string().optional().or(z.literal("")),
-});
+const ledgerEntrySchema = z
+  .object({
+    entry_type: z.enum(["borc", "tahsilat", "iade"]),
+    amount: z.coerce.number().positive("Tutar 0'dan büyük olmalı"),
+    description: z.string().optional().or(z.literal("")),
+    payment_method: z.enum(["nakit", "pos", "havale"]).optional().or(z.literal("")),
+    account_id: z.coerce.number().int().positive().optional().or(z.literal("")),
+  })
+  .superRefine((data, ctx) => {
+    if (data.entry_type === "tahsilat" || data.entry_type === "iade") {
+      if (!data.payment_method) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["payment_method"],
+          message: "Ödeme yöntemi seçin",
+        });
+      }
+      if (!data.account_id) {
+        ctx.addIssue({ code: "custom", path: ["account_id"], message: "Hesap seçin" });
+      }
+    }
+  });
 
 export async function createLedgerEntry(
   customerId: number,
@@ -101,11 +118,15 @@ export async function createLedgerEntry(
     entry_type: formData.get("entry_type"),
     amount: formData.get("amount"),
     description: formData.get("description"),
+    payment_method: formData.get("payment_method") || undefined,
+    account_id: formData.get("account_id") || undefined,
   });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Geçersiz form." };
   }
+
+  const isPayment = parsed.data.entry_type === "tahsilat" || parsed.data.entry_type === "iade";
 
   const supabase = await createClient();
   const { error } = await supabase.from("ledger_entries").insert({
@@ -113,6 +134,8 @@ export async function createLedgerEntry(
     entry_type: parsed.data.entry_type,
     amount: parsed.data.amount,
     description: parsed.data.description || null,
+    payment_method: isPayment ? parsed.data.payment_method || null : null,
+    account_id: isPayment ? Number(parsed.data.account_id) || null : null,
   });
 
   if (error) {
@@ -122,6 +145,7 @@ export async function createLedgerEntry(
   revalidatePath(`/admin/musteriler/${customerId}`);
   revalidatePath("/admin/musteriler");
   revalidatePath("/admin/satislar");
+  revalidatePath("/admin/hesaplar");
   return undefined;
 }
 

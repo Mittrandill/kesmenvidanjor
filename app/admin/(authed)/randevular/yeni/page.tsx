@@ -15,7 +15,7 @@ export default async function YeniRandevuPage() {
     .order("name", { ascending: true });
 
   return (
-    <div className="space-y-4 max-w-lg">
+    <div className="space-y-4 max-w-lg pb-20 lg:pb-0">
       <Link
         href="/admin/randevular"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-600 hover:text-brand-600"
@@ -31,6 +31,7 @@ export default async function YeniRandevuPage() {
             action={createAppointment}
             customers={customers}
             submitLabel="Randevu Oluştur"
+            sticky
           />
         </div>
       ) : (

@@ -32,6 +32,12 @@ import {
   ArrowLeft,
   DownloadSimple,
   ShareFat,
+  Bank,
+  Receipt,
+  WarningCircle,
+  Warning,
+  Wallet,
+  HandCoins,
   type Icon as PhosphorIcon,
 } from "@phosphor-icons/react";
 
@@ -67,6 +73,12 @@ const map = {
   ArrowLeft,
   DownloadSimple,
   ShareFat,
+  Bank,
+  Receipt,
+  WarningCircle,
+  Warning,
+  Wallet,
+  HandCoins,
 } satisfies Record<string, PhosphorIcon>;
 
 export type IconName = keyof typeof map;

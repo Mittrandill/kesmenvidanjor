@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Yeni Müşteri", robots: { index: fa
 
 export default function YeniMusteriPage() {
   return (
-    <div className="space-y-4 max-w-lg">
+    <div className="space-y-4 max-w-lg pb-20 lg:pb-0">
       <Link
         href="/admin/musteriler"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-600 hover:text-brand-600"
@@ -18,7 +18,7 @@ export default function YeniMusteriPage() {
       </Link>
       <h1 className="text-xl font-extrabold text-ink-900">Yeni Müşteri</h1>
       <div className="rounded-2xl bg-white p-5 ring-1 ring-black/5">
-        <CustomerForm action={createCustomer} submitLabel="Müşteri Ekle" />
+        <CustomerForm action={createCustomer} submitLabel="Müşteri Ekle" sticky />
       </div>
     </div>
   );

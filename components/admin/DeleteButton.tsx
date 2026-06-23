@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { ConfirmSheet } from "@/components/admin/ConfirmSheet";
 import { Icon } from "@/components/ui/Icon";
 
 export function DeleteButton({
@@ -9,20 +11,27 @@ export function DeleteButton({
   action: () => Promise<void>;
   confirmMessage: string;
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <form
-      action={action}
-      onSubmit={(e) => {
-        if (!confirm(confirmMessage)) e.preventDefault();
-      }}
-    >
+    <>
       <button
-        type="submit"
+        type="button"
+        onClick={() => setOpen(true)}
         aria-label="Sil"
-        className="grid place-items-center w-8 h-8 rounded-lg text-ink-500 hover:bg-brand-50 hover:text-brand-600"
+        className="grid place-items-center w-9 h-9 rounded-lg text-ink-500 hover:bg-brand-50 hover:text-brand-600"
       >
         <Icon name="Trash" size={16} />
       </button>
-    </form>
+      <ConfirmSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Kaydı Sil"
+        message={confirmMessage}
+        confirmLabel="Sil"
+        danger
+        action={action}
+      />
+    </>
   );
 }

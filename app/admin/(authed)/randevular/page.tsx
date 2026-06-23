@@ -7,6 +7,7 @@ import { AppointmentRow } from "@/components/admin/AppointmentRow";
 import { StatusSelect } from "@/components/admin/StatusSelect";
 import { RowActions } from "@/components/admin/RowActions";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { AppointmentCard } from "@/components/admin/AppointmentCard";
 import { Pagination } from "@/components/admin/Pagination";
 import { deleteAppointment } from "@/app/admin/(authed)/randevular/actions";
 import { Icon } from "@/components/ui/Icon";
@@ -127,7 +128,7 @@ export default async function RandevularPage({
         </p>
       ) : (
         <>
-          <div className="overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
+          <div className="hidden lg:block overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-black/5 text-left text-xs font-semibold uppercase tracking-wide text-ink-500">
@@ -172,6 +173,22 @@ export default async function RandevularPage({
                 })}
               </tbody>
             </table>
+          </div>
+          <div className="lg:hidden space-y-2">
+            {list.map((a) => (
+              <AppointmentCard
+                key={a.id}
+                appointment={{
+                  id: a.id,
+                  customer_id: a.customer_id,
+                  customer_name: a.customers?.name,
+                  service_slug: a.service_slug,
+                  scheduled_at: a.scheduled_at,
+                  region: a.region,
+                  status: a.status,
+                }}
+              />
+            ))}
           </div>
           <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
         </>

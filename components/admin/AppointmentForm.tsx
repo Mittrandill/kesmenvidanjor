@@ -3,6 +3,8 @@
 import { useActionState } from "react";
 import { services, regions } from "@/lib/site-config";
 import { toIstanbulInputValue } from "@/lib/utils";
+import { useFormSuccess } from "@/lib/use-form-success";
+import { FormActionBar } from "@/components/admin/FormActionBar";
 import type { FormState } from "@/app/admin/(authed)/randevular/actions";
 
 const inputCls =
@@ -19,6 +21,8 @@ type Props = {
     notes: string | null;
   };
   submitLabel: string;
+  onSuccess?: () => void;
+  sticky?: boolean;
 };
 
 export function AppointmentForm({
@@ -26,8 +30,21 @@ export function AppointmentForm({
   customers,
   defaultValues,
   submitLabel,
+  onSuccess,
+  sticky,
 }: Props) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  useFormSuccess(pending, Boolean(state?.error), onSuccess);
+
+  const submitButton = (
+    <button
+      type="submit"
+      disabled={pending}
+      className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
+    >
+      {pending ? "Kaydediliyor..." : submitLabel}
+    </button>
+  );
 
   return (
     <form action={formAction} className="space-y-4">
@@ -123,13 +140,7 @@ export function AppointmentForm({
 
       {state?.error && <p className="text-sm text-brand-600">{state.error}</p>}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 font-semibold text-white transition-colors hover:bg-brand-700 disabled:opacity-60"
-      >
-        {pending ? "Kaydediliyor..." : submitLabel}
-      </button>
+      {sticky ? <FormActionBar>{submitButton}</FormActionBar> : submitButton}
     </form>
   );
 }

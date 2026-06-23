@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Icon } from "@/components/ui/Icon";
 import { BalanceDisplay } from "@/components/admin/BalanceDisplay";
 import { CustomerForm } from "@/components/admin/CustomerForm";
+import { EditSheetTrigger } from "@/components/admin/EditSheetTrigger";
 import { AppointmentListItem } from "@/components/admin/AppointmentListItem";
 import { LedgerEntryListItem } from "@/components/admin/LedgerEntryListItem";
 import { LedgerEntryForm } from "@/components/admin/LedgerEntryForm";
@@ -29,6 +30,7 @@ export default async function MusteriDetayPage({
     { data: balanceRow },
     { data: appointments },
     { data: ledgerEntries },
+    { data: accounts },
   ] = await Promise.all([
     supabase.from("customers").select("*").eq("id", customerId).single(),
     supabase
@@ -48,6 +50,7 @@ export default async function MusteriDetayPage({
       .eq("customer_id", customerId)
       .order("created_at", { ascending: false })
       .limit(10),
+    supabase.from("accounts").select("id,name").order("name", { ascending: true }),
   ]);
 
   if (!customer) {
@@ -69,18 +72,40 @@ export default async function MusteriDetayPage({
 
       <div className="rounded-2xl bg-white p-5 ring-1 ring-black/5">
         <div className="flex items-start justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl font-extrabold text-ink-900">{customer.name}</h1>
-            <p className="mt-1 text-sm text-ink-500">
-              {customer.phone ?? "—"}
-              {customer.region ? ` · ${customer.region}` : ""}
-            </p>
+            <p className="mt-1 text-sm text-ink-500">{customer.phone ?? "—"}</p>
           </div>
           <BalanceDisplay balance={balanceRow?.balance ?? 0} />
         </div>
+
+        <dl className="mt-4 space-y-2 border-t border-black/5 pt-4 text-sm">
+          <div className="flex gap-2">
+            <dt className="w-20 shrink-0 text-ink-500">Bölge</dt>
+            <dd className="text-ink-800">{customer.region ?? "—"}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="w-20 shrink-0 text-ink-500">Adres</dt>
+            <dd className="text-ink-800">{customer.address ?? "—"}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="w-20 shrink-0 text-ink-500">Not</dt>
+            <dd className="text-ink-800">{customer.notes ?? "—"}</dd>
+          </div>
+        </dl>
+
+        <div className="mt-4">
+          <EditSheetTrigger sheetTitle="Müşteriyi Düzenle">
+            <CustomerForm
+              action={boundUpdate}
+              defaultValues={customer}
+              submitLabel="Değişiklikleri Kaydet"
+            />
+          </EditSheetTrigger>
+        </div>
       </div>
 
-      <LedgerEntryForm action={boundCreateLedgerEntry} />
+      <LedgerEntryForm action={boundCreateLedgerEntry} accounts={accounts ?? []} />
 
       <section className="space-y-2">
         <div className="flex items-center justify-between">
@@ -130,15 +155,6 @@ export default async function MusteriDetayPage({
             Henüz randevu yok.
           </p>
         )}
-      </section>
-
-      <section className="rounded-2xl bg-white p-5 ring-1 ring-black/5">
-        <h2 className="mb-4 text-sm font-semibold text-ink-500">Müşteriyi Düzenle</h2>
-        <CustomerForm
-          action={boundUpdate}
-          defaultValues={customer}
-          submitLabel="Değişiklikleri Kaydet"
-        />
       </section>
     </div>
   );
