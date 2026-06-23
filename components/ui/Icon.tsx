@@ -21,6 +21,15 @@ import {
   List,
   X,
   Star,
+  House,
+  CalendarBlank,
+  Users,
+  CurrencyCircleDollar,
+  SignOut,
+  Plus,
+  PencilSimple,
+  Trash,
+  ArrowLeft,
   type Icon as PhosphorIcon,
 } from "@phosphor-icons/react";
 
@@ -45,6 +54,15 @@ const map = {
   List,
   X,
   Star,
+  House,
+  CalendarBlank,
+  Users,
+  CurrencyCircleDollar,
+  SignOut,
+  Plus,
+  PencilSimple,
+  Trash,
+  ArrowLeft,
 } satisfies Record<string, PhosphorIcon>;
 
 export type IconName = keyof typeof map;

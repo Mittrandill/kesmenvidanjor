@@ -3,9 +3,6 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
 import { localBusinessJsonLd } from "@/lib/seo";
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
-import { FloatingActions } from "@/components/site/FloatingActions";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin", "latin-ext"],
@@ -74,10 +71,7 @@ export default function RootLayout({
             __html: JSON.stringify(localBusinessJsonLd()),
           }}
         />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <FloatingActions />
+        {children}
       </body>
     </html>
   );
