@@ -57,6 +57,14 @@ export default async function RandevuDetayPage({
         <StatusBadge status={appointment.status} />
       </div>
 
+      <a
+        href={`/admin/randevular/${appointmentId}/ics`}
+        className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink-700 ring-1 ring-black/10 hover:ring-brand-200"
+      >
+        <Icon name="CalendarBlank" size={16} />
+        Takvime Ekle
+      </a>
+
       {appointment.status === "planlandi" && (
         <div className="space-y-3">
           <CompleteAppointmentForm action={boundComplete} />

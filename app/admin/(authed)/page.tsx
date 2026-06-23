@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getIstanbulTodayRange } from "@/lib/utils";
 import { StatCard } from "@/components/admin/StatCard";
 import { AppointmentListItem } from "@/components/admin/AppointmentListItem";
 import { LedgerEntryListItem } from "@/components/admin/LedgerEntryListItem";
+import { Icon } from "@/components/ui/Icon";
 
 export const metadata: Metadata = { title: "Özet", robots: { index: false } };
 
@@ -57,6 +59,26 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <h1 className="text-xl font-extrabold text-ink-900">Özet</h1>
+
+      <section className="space-y-2">
+        <h2 className="text-sm font-semibold text-ink-500">Hızlı İşlemler</h2>
+        <div className="grid grid-cols-2 gap-3">
+          <Link
+            href="/admin/randevular/yeni"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
+          >
+            <Icon name="Plus" size={16} weight="bold" />
+            Yeni Randevu
+          </Link>
+          <Link
+            href="/admin/satislar/yeni"
+            className="inline-flex items-center justify-center gap-1.5 rounded-full bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700"
+          >
+            <Icon name="Plus" size={16} weight="bold" />
+            Yeni Satış
+          </Link>
+        </div>
+      </section>
 
       <div className="grid grid-cols-2 gap-3">
         <StatCard
