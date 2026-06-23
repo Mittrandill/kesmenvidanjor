@@ -97,6 +97,14 @@ export async function cancelAppointment(id: number) {
   revalidatePath("/admin");
 }
 
+export async function deleteAppointment(id: number) {
+  const supabase = await createClient();
+  await supabase.from("appointments").delete().eq("id", id);
+  revalidatePath("/admin/randevular");
+  revalidatePath("/admin/musteriler");
+  revalidatePath("/admin");
+}
+
 const completeSchema = z.object({
   amount: z.coerce.number().positive("Tutar 0'dan büyük olmalı"),
   description: z.string().optional().or(z.literal("")),

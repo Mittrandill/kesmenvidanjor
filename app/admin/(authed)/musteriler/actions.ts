@@ -121,5 +121,15 @@ export async function createLedgerEntry(
 
   revalidatePath(`/admin/musteriler/${customerId}`);
   revalidatePath("/admin/musteriler");
+  revalidatePath("/admin/satislar");
   return undefined;
+}
+
+export async function deleteCustomer(id: number) {
+  const supabase = await createClient();
+  await supabase.from("customers").delete().eq("id", id);
+  revalidatePath("/admin/musteriler");
+  revalidatePath("/admin/randevular");
+  revalidatePath("/admin/satislar");
+  revalidatePath("/admin");
 }

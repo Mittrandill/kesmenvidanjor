@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { CustomerListItem } from "@/components/admin/CustomerListItem";
+import { BalanceDisplay } from "@/components/admin/BalanceDisplay";
+import { DeleteButton } from "@/components/admin/DeleteButton";
+import { deleteCustomer } from "@/app/admin/(authed)/musteriler/actions";
 import { Icon } from "@/components/ui/Icon";
 
 export const metadata: Metadata = { title: "Müşteriler", robots: { index: false } };
@@ -42,10 +44,56 @@ export default async function MusterilerPage() {
           Henüz müşteri eklenmemiş.
         </p>
       ) : (
-        <div className="space-y-2">
-          {list.map((c) => (
-            <CustomerListItem key={c.id} customer={c} />
-          ))}
+        <div className="overflow-x-auto rounded-2xl ring-1 ring-black/5 bg-white">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-black/5 text-left text-xs font-semibold uppercase tracking-wide text-ink-500">
+                <th className="px-4 py-3 whitespace-nowrap">Ad Soyad</th>
+                <th className="px-4 py-3 whitespace-nowrap">Telefon</th>
+                <th className="px-4 py-3 whitespace-nowrap">Bölge</th>
+                <th className="px-4 py-3 whitespace-nowrap">Bakiye</th>
+                <th className="px-4 py-3 whitespace-nowrap text-right">İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.map((c) => (
+                <tr
+                  key={c.id}
+                  className="border-b border-black/5 last:border-0 hover:bg-black/[0.015]"
+                >
+                  <td className="px-4 py-3 whitespace-nowrap font-medium text-ink-900">
+                    <Link href={`/admin/musteriler/${c.id}`} className="hover:text-brand-600">
+                      {c.name}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-ink-600">
+                    {c.phone ?? "—"}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-ink-600">
+                    {c.region ?? "—"}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <BalanceDisplay balance={c.balance} size="sm" />
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="flex items-center justify-end gap-1">
+                      <Link
+                        href={`/admin/musteriler/${c.id}`}
+                        aria-label="Düzenle"
+                        className="grid place-items-center w-8 h-8 rounded-lg text-ink-500 hover:bg-black/5 hover:text-brand-600"
+                      >
+                        <Icon name="PencilSimple" size={16} />
+                      </Link>
+                      <DeleteButton
+                        action={deleteCustomer.bind(null, c.id)}
+                        confirmMessage={`${c.name} silinsin mi? Müşteriye ait TÜM randevu ve cari hareket geçmişi de silinecektir. Bu işlem geri alınamaz.`}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

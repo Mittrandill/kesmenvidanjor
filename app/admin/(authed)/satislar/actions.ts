@@ -54,6 +54,60 @@ export async function createSale(
 
   revalidatePath(`/admin/musteriler/${parsed.data.customer_id}`);
   revalidatePath("/admin/musteriler");
+  revalidatePath("/admin/satislar");
   revalidatePath("/admin");
   redirect(`/admin/musteriler/${parsed.data.customer_id}`);
+}
+
+const saleEditSchema = z.object({
+  customer_id: z.coerce.number().int().positive("Müşteri seçin"),
+  entry_type: z.enum(["borc", "tahsilat", "iade"]),
+  amount: z.coerce.number().positive("Tutar 0'dan büyük olmalı"),
+  description: z.string().optional().or(z.literal("")),
+});
+
+export async function updateSale(
+  id: number,
+  _prevState: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const parsed = saleEditSchema.safeParse({
+    customer_id: formData.get("customer_id"),
+    entry_type: formData.get("entry_type"),
+    amount: formData.get("amount"),
+    description: formData.get("description"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Geçersiz form." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("ledger_entries")
+    .update({
+      customer_id: parsed.data.customer_id,
+      entry_type: parsed.data.entry_type,
+      amount: parsed.data.amount,
+      description: parsed.data.description || null,
+    })
+    .eq("id", id);
+
+  if (error) {
+    return { error: "Kayıt güncellenemedi." };
+  }
+
+  revalidatePath("/admin/satislar");
+  revalidatePath(`/admin/musteriler/${parsed.data.customer_id}`);
+  revalidatePath("/admin/musteriler");
+  revalidatePath("/admin");
+  redirect("/admin/satislar");
+}
+
+export async function deleteSale(id: number) {
+  const supabase = await createClient();
+  await supabase.from("ledger_entries").delete().eq("id", id);
+  revalidatePath("/admin/satislar");
+  revalidatePath("/admin/musteriler");
+  revalidatePath("/admin");
 }
