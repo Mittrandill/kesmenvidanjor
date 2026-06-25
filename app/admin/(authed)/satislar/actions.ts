@@ -147,4 +147,5 @@ export async function deleteSale(id: number) {
   revalidatePath("/admin/musteriler");
   revalidatePath("/admin/hesaplar");
   revalidatePath("/admin");
+  redirect("/admin/satislar");
 }

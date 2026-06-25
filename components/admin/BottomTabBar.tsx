@@ -11,8 +11,8 @@ export function BottomTabBar() {
 
   return (
     <nav
-      className="fixed bottom-0 inset-x-0 z-40 grid grid-cols-5 border-t border-black/5 bg-white lg:hidden"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="fixed inset-x-3 z-40 grid grid-cols-5 rounded-2xl border border-black/8 bg-white/95 shadow-xl shadow-black/10 backdrop-blur-md lg:hidden"
+      style={{ bottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
     >
       {navItems.map((tab) => {
         const active =

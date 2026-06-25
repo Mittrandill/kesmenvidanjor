@@ -26,7 +26,7 @@ export function LedgerEntryListItem({
     created_at: string;
   };
 }) {
-  const increasesDebt = entry.entry_type !== "tahsilat";
+  const increasesDebt = entry.entry_type === "borc";
 
   return (
     <div className="flex items-center justify-between gap-3 rounded-2xl bg-white p-4 ring-1 ring-black/5">

@@ -30,9 +30,9 @@ export function LedgerEntryForm({
         className="flex w-full items-center gap-2 rounded-2xl bg-white p-4 font-semibold text-ink-900 ring-1 ring-black/5 hover:ring-brand-200"
       >
         <Icon name="HandCoins" size={20} className="text-brand-600" />
-        Tahsilat Ekle
+        Hareket Ekle
       </button>
-      <BottomSheet open={open} onClose={() => setOpen(false)} title="Tahsilat Ekle">
+      <BottomSheet open={open} onClose={() => setOpen(false)} title="Hareket Ekle">
         <form action={formAction} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <select

@@ -39,7 +39,7 @@ export default async function AuthedAdminLayout({
             </form>
           </div>
         </header>
-        <main className="px-4 py-5 pb-24 lg:px-6 lg:pb-6">{children}</main>
+        <main className="px-4 py-5 pb-32 lg:px-6 lg:pb-6">{children}</main>
       </div>
       <BottomTabBar />
     </div>
