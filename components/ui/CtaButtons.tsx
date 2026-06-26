@@ -1,4 +1,7 @@
+"use client";
+
 import { primaryContact, waLink, waMessage } from "@/lib/site-config";
+import { trackPhoneClick, trackWhatsAppClick } from "@/lib/gtag";
 import { Icon } from "./Icon";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +18,7 @@ export function CtaButtons({ className, message = waMessage, size = "lg" }: Prop
     <div className={cn("flex flex-col sm:flex-row gap-3", className)}>
       <a
         href={`tel:${primaryContact.phoneRaw}`}
+        onClick={trackPhoneClick}
         className={cn(
           "inline-flex items-center justify-center gap-2 rounded-full font-semibold text-white",
           "bg-brand-600 hover:bg-brand-700 transition-colors shadow-lg shadow-brand-600/30",
@@ -26,6 +30,7 @@ export function CtaButtons({ className, message = waMessage, size = "lg" }: Prop
       </a>
       <a
         href={waLink(primaryContact.whatsapp, message)}
+        onClick={trackWhatsAppClick}
         target="_blank"
         rel="noopener noreferrer"
         className={cn(

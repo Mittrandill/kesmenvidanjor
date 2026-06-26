@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { primaryContact, waLink } from "@/lib/site-config";
+import { trackPhoneClick, trackWhatsAppClick } from "@/lib/gtag";
 import { Icon } from "@/components/ui/Icon";
 
 // Sağ altta yüzen WhatsApp + Ara butonları (her sayfada)
@@ -10,6 +11,7 @@ export function FloatingActions() {
     <div className="fixed bottom-5 right-4 z-50 flex flex-col gap-3">
       <motion.a
         href={waLink(primaryContact.whatsapp)}
+        onClick={trackWhatsAppClick}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="WhatsApp ile yaz"
@@ -23,6 +25,7 @@ export function FloatingActions() {
       </motion.a>
       <motion.a
         href={`tel:${primaryContact.phoneRaw}`}
+        onClick={trackPhoneClick}
         aria-label="Hemen ara"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { primaryContact } from "@/lib/site-config";
+import { trackPhoneClick } from "@/lib/gtag";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +31,7 @@ export function Header() {
           </span>
           <a
             href={`tel:${primaryContact.phoneRaw}`}
+            onClick={trackPhoneClick}
             className="inline-flex items-center gap-1.5 font-semibold hover:text-amber-glow transition-colors"
           >
             <Icon name="Phone" size={16} className="text-amber-glow" />
@@ -68,6 +70,7 @@ export function Header() {
           <div className="flex items-center gap-2">
             <a
               href={`tel:${primaryContact.phoneRaw}`}
+            onClick={trackPhoneClick}
               className="hidden sm:inline-flex items-center gap-2 rounded-full bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 text-sm font-semibold transition-colors"
             >
               <Icon name="Phone" size={18} />
