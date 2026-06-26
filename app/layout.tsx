@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
 import { localBusinessJsonLd } from "@/lib/seo";
@@ -65,6 +66,18 @@ export default function RootLayout({
   return (
     <html lang="tr" className={jakarta.variable}>
       <body className="min-h-screen bg-white text-ink-800 antialiased">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18265036171"
+          strategy="afterInteractive"
+        />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-18265036171');
+          `}
+        </Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
